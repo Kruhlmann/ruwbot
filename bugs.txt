@@ -1,0 +1,14 @@
+BUGS
+----
+Giving points doesnt work properly, gives points based on 0 instead of current points
+Adjust points interval to an appropriate value
+
+SUGG
+----
+
+SFX:
+Golf clap
+Ruwin quotes
+DJ Khaled
+Airhorn
+Knawledge
