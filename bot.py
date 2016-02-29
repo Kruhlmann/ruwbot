@@ -8,6 +8,7 @@ import re
 import string
 import config
 import json
+import duel
 
 import usercommands
 
@@ -50,6 +51,9 @@ def get_moderator_json():
 def add_points():
 	db_manager.query("UPDATE user_points SET points = points + 1")
 	db_manager.db.commit()
+
+def reset_points():
+	db_manager.query("UPDATE user_points SET points = 0")
 
 # Method for sending a message  
 def sendMessage(message):
@@ -112,6 +116,10 @@ while True:
 					if message.startswith("!"):
 						command_args = str.split(message, " ")
 
+						if command_args[0].find('!logoff') != -1:
+								if username == "gasolinebased":
+									exit()
+
 						if command_args[0].find('!autism') != -1:
 							sendMessage(usercommands.get_autism_level(command_args, username))
 
@@ -133,6 +141,25 @@ while True:
 
 						if command_args[0].find("!playsound") != -1:
 							sendMessage(usercommands.play_sound(command_args, username, db_manager))
+
+						#if command_args == "!soundcombo":
+
+						#if command_args[0] == "!duel":
+						#	if(len(command_args) < 3):
+						#		sendMessage(username + ", you need to use the syntax: !duel username amount")
+						#	else:
+						#		sendMessage(duel.request_duel(username, command_args[1], command_args[2], db_manager))
+
+						#if command_args[0] == "!accept":
+						#	sendMessage(duel.accept_duel(username, db_manager))
+
+						if command_args[0] == "!resetdb":
+							if username == "ruwin" or username == "gasolinebased":
+								reset_points()
+								sendMessage("Points have been reset to 0 for all users by " + username)
+							else:
+								sendMessage("Sorry " + username + ", you don't have permission to execute that command FeelsBadMan")
+
 
 					#
 					#END COMMANDS

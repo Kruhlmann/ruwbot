@@ -1,56 +1,57 @@
-    #usercommands.py
-    import winsound
-    import config
+#usercommands.py
+import winsound
+import config
+import duel
 
-    from random import randint
+from random import randint
 
-    def play_sound(command_args, username, db_manager):
-        if len(command_args) < 2:
-            sounds = ""
-            for sound in config.sounds:
-                sounds += sound + ", "
-            return("The list of sounds are currently: " + sounds)
-        else:
-            points = db_manager.get_user_points(username)
+def play_sound(command_args, username, db_manager):
+	if len(command_args) < 2:
+		sounds = ""
+		for sound in config.sounds:
+			sounds += sound + ", "
+		return("The list of sounds are currently: " + sounds)
+	else:
+		points = db_manager.get_user_points(username)
 
-            if points >= config.SOUND_COST:
-                if command_args[1] in config.sounds:
-                    db_manager.update_user(username, points - config.SOUND_COST)
-                    winsound.PlaySound("sound/" + command_args[1], winsound.SND_FILENAME)
-                    return(None)
-                else:
-                    return("The sound " + command_args[1] +  " is not in the library! You have not been charged any points.")
+		if points >= config.SOUND_COST:
+			if command_args[1] in config.sounds:
+				db_manager.update_user(username, points - config.SOUND_COST)
+				winsound.PlaySound("sound/" + command_args[1], winsound.SND_FILENAME)
+				return(None)
+			else:
+				return("The sound " + command_args[1] +  " is not in the library! You have not been charged any points.")
 
-    def get_autism_level(command_args, username):
-        sender = username
-        if len(command_args) > 1:
-            sender = command_args[1]
-        randLevel = randint(0,100)
-        if str.lower(sender).find("tkeey") != -1:
-            randLevel = randint(80,100)
-        emote = ""
-        if randLevel <= 30:
-            emote = "FeelsGoodMan"
-        elif randLevel <= 75:
-            emote = "FeelsBadMan"
-        else:
-            emote = "EleGiggle"
-        return(sender + " is " + str(randLevel) + "%" + " autistic " + emote)
+def get_autism_level(command_args, username):
+	sender = username
+	if len(command_args) > 1:
+		sender = command_args[1]
+	randLevel = randint(0,100)
+	if str.lower(sender).find("tkeey") != -1:
+		randLevel = randint(80,100)
+	emote = ""
+	if randLevel <= 30:
+		emote = "FeelsGoodMan"
+	elif randLevel <= 75:
+		emote = "FeelsBadMan"
+	else:
+		emote = "EleGiggle"
+	return(sender + " is " + str(randLevel) + "%" + " autistic " + emote)
 
-    def update_json(db_manager, chatters, mods):
-        print("Fetching JSON for channel " + config.CHAN)
+def update_json(db_manager, chatters, mods):
+	print("Fetching JSON for channel " + config.CHAN)
 
-        if chatters != False:
-            try:
-                for chatter in chatteis:
-                    q = db_manager.query("SELECT * FROM user_points WHERE user = \'" + chatter + "\'")
-                    if q.fetchone() == None:
-                        db_manager.create_user(chatter)
-                        print("Creating user " + chatter)
-                    else:
-                        print("Chatter " + chatter + " already exists in the database")
-            except:
-                return "An error occured while fetching user JSON from the twitch API. Try again"
+	if chatters != False:
+		try:
+			for chatter in chatteis:
+				q = db_manager.query("SELECT * FROM user_points WHERE user = \'" + chatter + "\'")
+				if q.fetchone() == None:
+					db_manager.create_user(chatter)
+					print("Creating user " + chatter)
+				else:
+					print("Chatter " + chatter + " already exists in the database")
+		except:
+			return "An error occured while fetching user JSON from the twitch API. Try again"
 
 	if mods != False:
 		try:
@@ -97,7 +98,7 @@ def roulette(command_args, username, db_manager):
 	if len(command_args) < 2:
 		return (username + " you need to specify an amount to roll [!roulette 37]")
 	else:
-		gamble = int(command_args[1]) 
+		gamble = int(command_args[1])
 		user_points = db_manager.get_user_points(username)
 		if user_points == None:
 			return (username + " you dont exist in the database. creating you now")
@@ -121,4 +122,4 @@ def get_message_emotes(message, db_manager):
 		print(part)
 
 def get_developer_info():
-    return ("This bot has been programmed for twitch.tv/ruwin by Andreas Kruhlmann. The source code is avaliable on github (https://github.com/kruhlmann).")
+	return ("This bot has been programmed for twitch.tv/ruwin by Andreas Kruhlmann. The source code is avaliable on github (https://github.com/kruhlmann).")
