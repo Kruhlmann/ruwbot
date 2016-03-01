@@ -1,7 +1,6 @@
 BUGS
 ----
 Giving points doesnt work properly, gives points based on 0 instead of current points
-Adjust points interval to an appropriate value
 
 SUGG
 ----
@@ -12,3 +11,7 @@ Ruwin quotes
 DJ Khaled
 Airhorn
 Knawledge
+1:12
+Filthy Frank
+Damn daniel white Vans
+Steam notification sound
