@@ -15,7 +15,7 @@ class Db_Manager():
 
 	def __init__(self, channel):
 		self.db = sqlite3.connect("db/" + channel + ".db")
-		self.emote_db = sqlite3.connect("db/_emotes.db")
+		self.emote_db = sqlite3.connect("db/emotes.db")
 		self.cursor = self.db.cursor()
 		self.emote_cursor = self.emote_db.cursor()
 
@@ -63,15 +63,13 @@ class Db_Manager():
     #still in dev pls no userino until fixerino Kappa (validate the JSON file gotten from the twitchemotes API)
     #this version has been almost completely grabbed from pajladas github (github.com/pajlada)
 	def update_emote_db(self):
-		self.emote_cursor.execute("CREATE TABLE IF NOT EXISTS emotes VALUES (name TEXT, id INT, description TEXT)")
+		self.emote_cursor.execute("CREATE TABLE IF NOT EXISTS emotes (name TEXT, id INT)")
 		self.emote_db.commit()
-		try:
-			url = "https://twitchemotes.com/api_cache/v2/global.json"
-			response = urllib2.urlopen(url)
-			data = json.loads(response.read().decode())
-			emotes = data["emotes"]
-			for emote in emotes:
-				emote_cursor.execute("")
-				print(data["emotes"][emote]["image_id"])
-		except Exception as e:
-			print("Error setting the emote json data")
+
+		url = "https://twitchemotes.com/api_cache/v2/global.json"
+		response = urllib2.urlopen(url)
+		data = json.loads(response.read().decode())
+		emotes = data["emotes"]
+		for emote in emotes:
+			self.emote_cursor.execute("INSERT INTO emotes VALUES ('" + emote + "', " + str(data["emotes"][emote]["image_id"]) + ")")
+			self.emote_db.commit()
