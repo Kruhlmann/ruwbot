@@ -9,9 +9,11 @@ import re
 import string
 import json
 import sqlite3
+import hashlib
 
 from tkinter import *
 from tkinter.ttk import *
+from random import getrandbits
 
 import duel
 import config
@@ -59,6 +61,12 @@ def sendMessage(message):
 	print("> " + config.NICK + ": " + message)
 	s.send(("PRIVMSG #" + config.CHAN + " :" + message + "\r\n").encode())
 
+def get_random_hash():
+	return hashlib.sha256(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
+
+def show_emote(emote):
+	s2.send(("PRIVMSG #420blazeitdawg :" + get_random_hash() + ":" + emote + "\r\n").encode())
+
 #when ran
 global version
 version = "0.4"
@@ -74,6 +82,13 @@ s.connect((config.HOST, config.PORT))
 s.send(("PASS " + config.PASS + "\r\n").encode())
 s.send(("NICK " + config.NICK + "\r\n").encode())
 s.send(("JOIN #" + config.CHAN + " \r\n").encode())
+
+s2 = socket.socket()
+s2.connect((config.HOST, config.PORT))
+s2.send(("PASS " + config.PASS + "\r\n").encode())
+s2.send(("NICK " + config.NICK + "\r\n").encode())
+s2.send(("JOIN #" + "420blazeitdawg" + " \r\n").encode())
+
 db_manager = Db_Manager(config.CHAN)
 
 print("Connected to channel #" + config.CHAN)
@@ -160,6 +175,10 @@ while True:
 						if command_args[0] == "!updateemotes":
 							db_manager.update_emote_db()
 							sendMessage("Emote database has been updated! 4Head")
+
+						if command_args[0] == "!showemote":
+							if(len(command_args) > 1):
+									show_emote(command_args[1])
 
 						if command_args[0] == "!playcombo":
 							sendMessage(usercommands.play_sound_combo(command_args, username, db_manager))
